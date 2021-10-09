@@ -141,7 +141,7 @@ const initMap = () => {
                     layout: {
                         'text-field': ['get', '施設名/名称'],
                         'text-font': ['Noto Sans CJK JP Regular'],
-                        'text-size': 10,
+                        'text-size': 11,
                         'text-offset': [0, 0.5],
                         'text-anchor': 'top',
                     },
