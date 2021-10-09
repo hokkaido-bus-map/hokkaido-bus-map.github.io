@@ -3,12 +3,13 @@
 </template>
 
 <script>
-import { Map } from 'maplibre-gl';
+import { Map, NavigationControl, Popup } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { getFreqSourcesLayers } from '../loader';
 
 import sightseeing from '../assets/sightseeing.json';
+import convenience from '../assets/convenience.json';
 import kitamiFreqGeojson from '../assets/busdata/kitami/frequency.json';
 import kitamiFreqStopsGeojson from '../assets/busdata/kitami/frequency_stops.json';
 import kitamimemanbetsuairportFreqGeojson from '../assets/busdata/kitamimemanbetsuairport/frequency.json';
@@ -60,22 +61,32 @@ const tokachiFreq = getFreqSourcesLayers(
     'tokachi',
 );
 
+const conveniencePaint = {
+    'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 1, 12, 4],
+    'circle-stroke-color': '#ffffff',
+    'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 9, 0, 12, 1],
+};
+
 const initMap = () => {
     const map = new Map({
         container: 'map',
         center: [142.9819, 40.3981],
         maxBounds: [139, 40, 150, 46],
         zoom: 6,
+        maxZoom: 17,
+        customAttribution: `<a href='https://github.com/hokkaido-bus-map/hokkaido-bus-map.github.io' target='_blank'>ソースコード・データ出典</a>`,
         style: {
             version: 8,
             glyphs: 'https://glyphs.geolonia.com/{fontstack}/{range}.pbf',
             sources: {
-                OSM: {
+                background: {
                     type: 'raster',
-                    tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+                    tiles: [
+                        'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+                    ],
                     tileSize: 256,
-                    attribution:
-                        'Map data &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+                    attribution: '地理院タイル',
+                    maxzoom: 18,
                 },
                 ...kitamiFreq.sources,
                 ...abashiriFreq.sources,
@@ -88,38 +99,103 @@ const initMap = () => {
                     type: 'geojson',
                     data: sightseeing,
                 },
+                convenience: {
+                    type: 'geojson',
+                    data: convenience,
+                },
             },
             layers: [
                 {
-                    id: 'OSM',
+                    id: 'background',
                     type: 'raster',
-                    source: 'OSM',
+                    source: 'background',
                     minzoom: 0,
                     maxzoom: 18,
+                    paint: {
+                        'raster-opacity': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            10,
+                            0.9,
+                            13,
+                            0.4,
+                        ],
+                    },
                 },
-                ...kitamiFreq.layers,
-                ...abashiriFreq.layers,
-                ...abashirishisetsumeguriFreq.layers,
-                ...akanFreq.layers,
-                ...kitamimemanbetsuairportFreq.layers,
-                ...takushokuFreq.layers,
-                ...tokachiFreq.layers,
+                ...[
+                    ...kitamiFreq.layers,
+                    ...abashiriFreq.layers,
+                    ...abashirishisetsumeguriFreq.layers,
+                    ...akanFreq.layers,
+                    ...kitamimemanbetsuairportFreq.layers,
+                    ...takushokuFreq.layers,
+                    ...tokachiFreq.layers,
+                ].sort((_, b) => {
+                    if (b.type === 'circle') return -1;
+                    if (b.type === 'symbol') return -1;
+                    else return 1;
+                }),
+                {
+                    id: 'convenience-seven',
+                    type: 'circle',
+                    source: 'convenience',
+                    minzoom: 5,
+                    paint: {
+                        ...conveniencePaint,
+                        'circle-color': '#ee2222',
+                    },
+                    filter: ['==', ['get', 'brand'], 'セブンイレブン'],
+                },
+                {
+                    id: 'convenience-secoma',
+                    type: 'circle',
+                    source: 'convenience',
+                    minzoom: 5,
+                    paint: { ...conveniencePaint, 'circle-color': '#ff9900' },
+                    filter: ['==', ['get', 'brand'], 'セイコーマート'],
+                },
+                {
+                    id: 'convenience-lawson',
+                    type: 'circle',
+                    source: 'convenience',
+                    minzoom: 5,
+                    paint: { ...conveniencePaint, 'circle-color': '#3333cc' },
+                    filter: ['==', ['get', 'brand'], 'ローソン'],
+                },
+                {
+                    id: 'convenience-famima',
+                    type: 'circle',
+                    source: 'convenience',
+                    minzoom: 5,
+                    paint: { ...conveniencePaint, 'circle-color': '#33cc33' },
+                    filter: ['==', ['get', 'brand'], 'ファミリーマート'],
+                },
+                {
+                    id: 'convenience-text',
+                    type: 'symbol',
+                    source: 'convenience',
+                    minzoom: 14,
+                    layout: {
+                        'text-field': ['get', 'brand'],
+                        'text-font': ['Noto Sans CJK JP Regular'],
+                        'text-size': 8,
+                        'text-offset': [0, 0.4],
+                        'text-anchor': 'top',
+                    },
+                    paint: {
+                        'text-halo-width': 1.5,
+                        'text-halo-color': '#ffffff',
+                    },
+                },
                 {
                     id: 'sightseeing',
                     type: 'circle',
                     source: 'sightseeing',
                     paint: {
-                        'circle-color': '#ff9900',
-                        'circle-stroke-color': '#ffffff',
-                        'circle-stroke-width': [
-                            'interpolate',
-                            ['linear'],
-                            ['zoom'],
-                            6,
-                            1,
-                            15,
-                            2,
-                        ],
+                        'circle-color': '#ffdd00',
+                        'circle-stroke-color': '#333333',
+                        'circle-stroke-width': 1,
                         'circle-radius': [
                             'interpolate',
                             ['linear'],
@@ -153,13 +229,31 @@ const initMap = () => {
             ],
         },
     });
+    map.addControl(new NavigationControl(), 'top-left');
     return map;
 };
 
 export default {
     name: 'Map',
     mounted: function() {
-        initMap();
+        const map = initMap();
+        const onclick = (e) => {
+            new Popup()
+                .setLngLat(e.features[0].geometry.coordinates)
+                .setHTML(
+                    `
+                <span><span style='font-weight:600'><a href='https://www.google.com/search?q=${e.features[0].properties['施設名/名称']}' target='_blank'>${e.features[0].properties['施設名/名称']} - Google検索</a></span><br />
+                <span>〒${e.features[0].properties['郵便番号']}<br />${e.features[0].properties['住所']}</span>
+                `,
+                )
+                .setMaxWidth('600px')
+                .addTo(map);
+        };
+        const onmouseenter = () => (map.getCanvas().style.cursor = 'pointer');
+        const onmouseleave = () => (map.getCanvas().style.cursor = '');
+        map.on('click', 'sightseeing', onclick);
+        map.on('mouseenter', 'sightseeing', onmouseenter);
+        map.on('mouseleave', 'sightseeing', onmouseleave);
     },
 };
 </script>
@@ -167,6 +261,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #map {
-    height: 100vh;
+    height: calc(100vh - 50px);
 }
 </style>

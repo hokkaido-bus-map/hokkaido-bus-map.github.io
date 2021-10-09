@@ -31,6 +31,12 @@ https://www.harp.lg.jp/opendata/dataset/591.html
 -   https://www.harp.lg.jp/opendata/dataset/606.html
 -   https://ckan.hoda.jp/dataset/gtfs-data/resource/b9e5c644-23e1-44c3-bad0-4ce364eb6cb6
 
+### コンビニ
+
+以下を加工した。
+
+-   https://download.geofabrik.de/asia/japan/hokkaido.html
+
 ## 本アプリケーションのライセンス
 
 -   MIT License
