@@ -6,8 +6,51 @@
 import { Map } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import kitamiFreq from '../assets/busdata/kitami/frequency.json';
-import kitamiFreqStops from '../assets/busdata/kitami/frequency_stops.json';
+import { getFreqSourcesLayers } from '../loader';
+
+import kitamiFreqGeojson from '../assets/busdata/kitami/frequency.json';
+import kitamiFreqStopsGeojson from '../assets/busdata/kitami/frequency_stops.json';
+import abashiriFreqGeojson from '../assets/busdata/abashiri/frequency.json';
+import abashiriFreqStopsGeojson from '../assets/busdata/abashiri/frequency_stops.json';
+import akanFreqGeojson from '../assets/busdata/akan/frequency.json';
+import akanFreqStopsGeojson from '../assets/busdata/akan/frequency_stops.json';
+import memanbetsuFreqGeojson from '../assets/busdata/memanbetsu/frequency.json';
+import memanbetsuFreqStopsGeojson from '../assets/busdata/memanbetsu/frequency_stops.json';
+import takushokuFreqGeojson from '../assets/busdata/takushoku/frequency.json';
+import takushokuFreqStopsGeojson from '../assets/busdata/takushoku/frequency_stops.json';
+import tokachiFreqGeojson from '../assets/busdata/tokachi/frequency.json';
+import tokachiFreqStopsGeojson from '../assets/busdata/tokachi/frequency_stops.json';
+
+const kitamiFreq = getFreqSourcesLayers(
+    kitamiFreqGeojson,
+    kitamiFreqStopsGeojson,
+    'kitami',
+);
+const abashiriFreq = getFreqSourcesLayers(
+    abashiriFreqGeojson,
+    abashiriFreqStopsGeojson,
+    'abashiri',
+);
+const akanFreq = getFreqSourcesLayers(
+    akanFreqGeojson,
+    akanFreqStopsGeojson,
+    'akan',
+);
+const memanbetsuFreq = getFreqSourcesLayers(
+    memanbetsuFreqGeojson,
+    memanbetsuFreqStopsGeojson,
+    'memanbetsu',
+);
+const takushokuFreq = getFreqSourcesLayers(
+    takushokuFreqGeojson,
+    takushokuFreqStopsGeojson,
+    'takushoku',
+);
+const tokachiFreq = getFreqSourcesLayers(
+    tokachiFreqGeojson,
+    tokachiFreqStopsGeojson,
+    'tokachi',
+);
 
 const initMap = () => {
     const map = new Map({
@@ -16,7 +59,7 @@ const initMap = () => {
         zoom: 6,
         style: {
             version: 8,
-            glyphs: 'https://mierune.github.io/fonts/{fontstack}/{range}.pbf',
+            glyphs: 'https://glyphs.geolonia.com/{fontstack}/{range}.pbf',
             sources: {
                 OSM: {
                     type: 'raster',
@@ -25,14 +68,12 @@ const initMap = () => {
                     attribution:
                         'Map data &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                 },
-                kitamiFreq: {
-                    type: 'geojson',
-                    data: kitamiFreq,
-                },
-                kitamiFreqStops: {
-                    type: 'geojson',
-                    data: kitamiFreqStops,
-                },
+                ...kitamiFreq.sources,
+                ...abashiriFreq.sources,
+                ...akanFreq.sources,
+                ...memanbetsuFreq.sources,
+                ...takushokuFreq.sources,
+                ...tokachiFreq.sources,
             },
             layers: [
                 {
@@ -42,69 +83,12 @@ const initMap = () => {
                     minzoom: 0,
                     maxzoom: 18,
                 },
-                {
-                    id: 'kitamiFreq',
-                    type: 'line',
-                    source: 'kitamiFreq',
-                    paint: {
-                        'line-color': '#009900',
-                        'line-width': [
-                            'interpolate',
-                            ['linear'],
-                            ['get', 'frequency'],
-                            1,
-                            0.1,
-                            10,
-                            5,
-                            100,
-                            10,
-                        ],
-                    },
-                },
-                {
-                    id: 'kitamiFreqText',
-                    type: 'symbol',
-                    source: 'kitamiFreq',
-                    layout: {
-                        'symbol-placement': 'line-center',
-                        'text-field': ['get', 'frequency'],
-                        'text-font': ['Noto Sans CJK JP Regular'],
-                        'text-size': 14,
-                        'text-offset': [0, -1],
-                    },
-                },
-                {
-                    id: 'kitamiFreqStops',
-                    type: 'circle',
-                    source: 'kitamiFreqStops',
-                    paint: {
-                        'circle-radius': [
-                            'interpolate',
-                            ['linear'],
-                            ['zoom'],
-                            1,
-                            1,
-                            5,
-                            2,
-                            10,
-                            3,
-                            16,
-                            4,
-                        ],
-                    },
-                },
-                {
-                    id: 'kitamiFreqStopsText',
-                    type: 'symbol',
-                    source: 'kitamiFreqStops',
-                    minzoom: 11,
-                    layout: {
-                        'text-field': ['get', 'similar_stop_name'],
-                        'text-font': ['Noto Sans CJK JP Regular'],
-                        'text-size': 14,
-                        'text-offset': [0, 1],
-                    },
-                },
+                ...kitamiFreq.layers,
+                ...abashiriFreq.layers,
+                ...akanFreq.layers,
+                ...memanbetsuFreq.layers,
+                ...takushokuFreq.layers,
+                ...tokachiFreq.layers,
             ],
         },
     });
