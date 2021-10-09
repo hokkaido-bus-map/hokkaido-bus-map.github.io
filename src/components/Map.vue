@@ -10,7 +10,7 @@ const initMap = () => {
     const map = new Map({
         container: 'map',
         center: [142.9819, 40.3981],
-        zoom: 7,
+        zoom: 6,
         style: {
             version: 8,
             sources: {
