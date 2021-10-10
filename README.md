@@ -1,3 +1,5 @@
+<img src='logo.png'>
+
 # hokkaido-bus-map
 
 https://hokkaido-bus-map.github.io/
@@ -29,8 +31,13 @@ https://www.harp.lg.jp/opendata/dataset/591.html
 -   函館帝産バス
 -   名士バス
 -   宗谷バス
+-   根室交通
+-   函館市電
 
-※加工には https://github.com/MIERUNE/GTFS-GO を用いた
+### 加工について
+
+-   加工には https://github.com/MIERUNE/GTFS-GO を用いた
+-   `2021/10/09` に運行している便で集計
 
 ### 観光地情報
 
