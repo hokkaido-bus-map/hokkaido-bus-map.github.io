@@ -1,4 +1,4 @@
-<template>
+,<template>
     <div>
         <input
             type="text"
@@ -12,7 +12,7 @@
                 <a
                     class="result-anchor"
                     href="#"
-                    @click="$emit('toLnglat', result.item.lnglat)"
+                    @click="$emit('toLnglat', result.item)"
                 >
                     {{ result.item.name }} </a
                 ><br />
@@ -32,6 +32,8 @@ const items = sightseeing.features.map((feature) => {
             feature.properties['座標(lon)'],
             feature.properties['座標(lat)'],
         ],
+        postcode: feature.properties['郵便番号'],
+        address: feature.properties['住所'],
     };
 });
 const fuse = new Fuse(items, {

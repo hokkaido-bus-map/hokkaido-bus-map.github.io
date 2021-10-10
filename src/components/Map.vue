@@ -373,8 +373,18 @@ export default {
         this.map = map;
     },
     methods: {
-        panTo: function(lnglat) {
-            this.map.easeTo({ center: lnglat, zoom: 14 });
+        panTo: function(item) {
+            new Popup()
+                .setLngLat(item.lnglat)
+                .setHTML(
+                    `
+                <span><span style='font-weight:600'><a href='https://www.google.com/search?q=${item.name}' target='_blank'>${item.name} - Google検索</a></span><br />
+                <span>〒${item.postcode}<br />${item.address}</span>
+                `,
+                )
+                .setMaxWidth('600px')
+                .addTo(this.map);
+            this.map.easeTo({ center: item.lnglat, zoom: 14 });
         },
         fitBounds: function(results) {
             const featurecollection = {
