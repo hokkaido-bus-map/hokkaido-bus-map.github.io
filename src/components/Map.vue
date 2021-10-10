@@ -17,7 +17,13 @@
 <script>
 import Search from './Search.vue';
 
-import { Map, NavigationControl, Popup, GeolocateControl } from 'maplibre-gl';
+import {
+    Map,
+    NavigationControl,
+    Popup,
+    GeolocateControl,
+    ScaleControl,
+} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import bbox from '@turf/bbox';
 
@@ -340,6 +346,7 @@ const initMap = () => {
             trackUserLocation: true,
         }),
     );
+    map.addControl(new ScaleControl());
     return map;
 };
 
