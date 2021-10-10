@@ -6,6 +6,11 @@
             @toLnglat="panTo($event)"
             @fitBounds="fitBounds($event)"
         />
+        <div id="logo">
+            <a href="https://github.com/hokkaido-bus-map" target="_blank">
+                <img src="/header.png" />
+            </a>
+        </div>
     </div>
 </template>
 
@@ -53,6 +58,8 @@ import nemuroFreqGeojson from '../assets/busdata/nemuro/frequency.json';
 import nemuroFreqStopsGeojson from '../assets/busdata/nemuro/frequency_stops.json';
 import chuoFreqGeojson from '../assets/busdata/chuo/frequency.json';
 import chuoFreqStopsGeojson from '../assets/busdata/chuo/frequency_stops.json';
+import hakodateshidenFreqGeojson from '../assets/busdata/hakodateshiden/frequency.json';
+import hakodateshidenFreqStopsGeojson from '../assets/busdata/hakodateshiden/frequency_stops.json';
 
 const kitamiFreq = getFreqSourcesLayers(
     kitamiFreqGeojson,
@@ -134,6 +141,11 @@ const chuoFreq = getFreqSourcesLayers(
     chuoFreqStopsGeojson,
     'chuo',
 );
+const hakodateshidenFreq = getFreqSourcesLayers(
+    hakodateshidenFreqGeojson,
+    hakodateshidenFreqStopsGeojson,
+    'hakodateshiden',
+);
 
 const conveniencePaint = {
     'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 1, 12, 4],
@@ -144,9 +156,8 @@ const conveniencePaint = {
 const initMap = () => {
     const map = new Map({
         container: 'map',
-        center: [142.9819, 40.3981],
-        maxBounds: [139, 40, 150, 46],
-        zoom: 6,
+        center: [142.683, 43.311],
+        maxBounds: [137, 40, 150, 47],
         maxZoom: 17,
         customAttribution: `<a href='https://github.com/hokkaido-bus-map/hokkaido-bus-map.github.io' target='_blank'>ソースコード・データ出典</a>`,
         style: {
@@ -155,11 +166,10 @@ const initMap = () => {
             sources: {
                 background: {
                     type: 'raster',
-                    tiles: [
-                        'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-                    ],
+                    tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
                     tileSize: 256,
-                    attribution: '地理院タイル',
+                    attribution:
+                        '<a href="http://osm.org/copyright">&copy; OpenStreetMap contributors</a>',
                     maxzoom: 18,
                 },
                 ...kitamiFreq.sources,
@@ -178,6 +188,7 @@ const initMap = () => {
                 ...meishiFreq.sources,
                 ...nemuroFreq.sources,
                 ...chuoFreq.sources,
+                ...hakodateshidenFreq.sources,
                 sightseeing: {
                     type: 'geojson',
                     data: sightseeing,
@@ -223,6 +234,7 @@ const initMap = () => {
                     ...meishiFreq.layers,
                     ...nemuroFreq.layers,
                     ...chuoFreq.layers,
+                    ...hakodateshidenFreq.layers,
                 ].sort((_, b) => {
                     if (b.type === 'circle') return -1;
                     if (b.type === 'symbol') return -1;
@@ -321,13 +333,12 @@ const initMap = () => {
             ],
         },
     });
-    map.addControl(new NavigationControl(), 'top-left');
+    map.addControl(new NavigationControl());
     map.addControl(
         new GeolocateControl({
             showUserLocation: true,
             trackUserLocation: true,
         }),
-        'top-left',
     );
     return map;
 };
@@ -392,7 +403,14 @@ export default {
 }
 #search {
     position: absolute;
-    left: 48px;
-    top: 48px;
+    left: 10px;
+    top: 80px;
+}
+#logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    height: 64px;
+    border: 1px solid #666;
 }
 </style>
