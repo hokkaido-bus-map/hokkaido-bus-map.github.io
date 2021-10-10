@@ -400,7 +400,7 @@ export default {
                 }),
             };
             const bounds = bbox(featurecollection);
-            this.map.fitBounds(bounds, { padding: 50 });
+            this.map.fitBounds(bounds, { padding: 100, duration: 800 });
         },
     },
 };
