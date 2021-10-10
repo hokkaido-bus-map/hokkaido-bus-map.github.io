@@ -346,7 +346,7 @@ const initMap = () => {
             trackUserLocation: true,
         }),
     );
-    map.addControl(new ScaleControl());
+    map.addControl(new ScaleControl({ maxWidth: 150 }));
     return map;
 };
 
