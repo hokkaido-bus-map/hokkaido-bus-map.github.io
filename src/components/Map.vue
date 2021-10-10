@@ -35,6 +35,24 @@ import takushokuFreqGeojson from '../assets/busdata/takushoku/frequency.json';
 import takushokuFreqStopsGeojson from '../assets/busdata/takushoku/frequency_stops.json';
 import tokachiFreqGeojson from '../assets/busdata/tokachi/frequency.json';
 import tokachiFreqStopsGeojson from '../assets/busdata/tokachi/frequency_stops.json';
+import asahikawaFreqGeojson from '../assets/busdata/asahikawa/frequency.json';
+import asahikawaFreqStopsGeojson from '../assets/busdata/asahikawa/frequency_stops.json';
+import hakodateFreqGeojson from '../assets/busdata/hakodate/frequency.json';
+import hakodateFreqStopsGeojson from '../assets/busdata/hakodate/frequency_stops.json';
+import douhokuFreqGeojson from '../assets/busdata/douhoku/frequency.json';
+import douhokuFreqStopsGeojson from '../assets/busdata/douhoku/frequency_stops.json';
+import dounanFreqGeojson from '../assets/busdata/dounan/frequency.json';
+import dounanFreqStopsGeojson from '../assets/busdata/dounan/frequency_stops.json';
+import furanoFreqGeojson from '../assets/busdata/furano/frequency.json';
+import furanoFreqStopsGeojson from '../assets/busdata/furano/frequency_stops.json';
+import soyaFreqGeojson from '../assets/busdata/soya/frequency.json';
+import soyaFreqStopsGeojson from '../assets/busdata/soya/frequency_stops.json';
+import meishiFreqGeojson from '../assets/busdata/meishi/frequency.json';
+import meishiFreqStopsGeojson from '../assets/busdata/meishi/frequency_stops.json';
+import nemuroFreqGeojson from '../assets/busdata/nemuro/frequency.json';
+import nemuroFreqStopsGeojson from '../assets/busdata/nemuro/frequency_stops.json';
+import chuoFreqGeojson from '../assets/busdata/chuo/frequency.json';
+import chuoFreqStopsGeojson from '../assets/busdata/chuo/frequency_stops.json';
 
 const kitamiFreq = getFreqSourcesLayers(
     kitamiFreqGeojson,
@@ -71,6 +89,51 @@ const tokachiFreq = getFreqSourcesLayers(
     tokachiFreqStopsGeojson,
     'tokachi',
 );
+const asahikawaFreq = getFreqSourcesLayers(
+    asahikawaFreqGeojson,
+    asahikawaFreqStopsGeojson,
+    'asahikawa',
+);
+const hakodateFreq = getFreqSourcesLayers(
+    hakodateFreqGeojson,
+    hakodateFreqStopsGeojson,
+    'hakodate',
+);
+const douhokuFreq = getFreqSourcesLayers(
+    douhokuFreqGeojson,
+    douhokuFreqStopsGeojson,
+    'douhoku',
+);
+const dounanFreq = getFreqSourcesLayers(
+    dounanFreqGeojson,
+    dounanFreqStopsGeojson,
+    'dounan',
+);
+const furanoFreq = getFreqSourcesLayers(
+    furanoFreqGeojson,
+    furanoFreqStopsGeojson,
+    'furano',
+);
+const soyaFreq = getFreqSourcesLayers(
+    soyaFreqGeojson,
+    soyaFreqStopsGeojson,
+    'soya',
+);
+const meishiFreq = getFreqSourcesLayers(
+    meishiFreqGeojson,
+    meishiFreqStopsGeojson,
+    'meishi',
+);
+const nemuroFreq = getFreqSourcesLayers(
+    nemuroFreqGeojson,
+    nemuroFreqStopsGeojson,
+    'nemuro',
+);
+const chuoFreq = getFreqSourcesLayers(
+    chuoFreqGeojson,
+    chuoFreqStopsGeojson,
+    'chuo',
+);
 
 const conveniencePaint = {
     'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 1, 12, 4],
@@ -106,6 +169,15 @@ const initMap = () => {
                 ...kitamimemanbetsuairportFreq.sources,
                 ...takushokuFreq.sources,
                 ...tokachiFreq.sources,
+                ...asahikawaFreq.sources,
+                ...hakodateFreq.sources,
+                ...douhokuFreq.sources,
+                ...dounanFreq.sources,
+                ...furanoFreq.sources,
+                ...soyaFreq.sources,
+                ...meishiFreq.sources,
+                ...nemuroFreq.sources,
+                ...chuoFreq.sources,
                 sightseeing: {
                     type: 'geojson',
                     data: sightseeing,
@@ -142,6 +214,15 @@ const initMap = () => {
                     ...kitamimemanbetsuairportFreq.layers,
                     ...takushokuFreq.layers,
                     ...tokachiFreq.layers,
+                    ...asahikawaFreq.layers,
+                    ...hakodateFreq.layers,
+                    ...douhokuFreq.layers,
+                    ...dounanFreq.layers,
+                    ...furanoFreq.layers,
+                    ...soyaFreq.layers,
+                    ...meishiFreq.layers,
+                    ...nemuroFreq.layers,
+                    ...chuoFreq.layers,
                 ].sort((_, b) => {
                     if (b.type === 'circle') return -1;
                     if (b.type === 'symbol') return -1;

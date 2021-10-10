@@ -3,7 +3,7 @@
         <input
             type="text"
             id="search-input"
-            placeholder="地域、市町村、施設名で検索"
+            placeholder="地域,市町村,観光地名で検索"
             v-model="query"
             @change="searchShisetsu"
         />

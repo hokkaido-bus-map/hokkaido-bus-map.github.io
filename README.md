@@ -21,6 +21,14 @@ https://www.harp.lg.jp/opendata/dataset/591.html
 -   十勝バス
 -   網走バス
 -   阿寒バス
+-   旭川電気軌道
+-   北海道中央バス
+-   道北バス
+-   道南バス
+-   ふらのバス
+-   函館帝産バス
+-   名士バス
+-   宗谷バス
 
 ※加工には https://github.com/MIERUNE/GTFS-GO を用いた
 
