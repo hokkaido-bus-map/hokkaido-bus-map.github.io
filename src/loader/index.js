@@ -36,7 +36,7 @@ const getFreqLayers = (prefix) => {
             type: 'line',
             source: freq,
             paint: {
-                'line-color': '#33ee33',
+                'line-color': '#22aa22',
                 'line-width': [
                     'interpolate',
                     ['linear'],
@@ -65,8 +65,8 @@ const getFreqLayers = (prefix) => {
                     16,
                     6,
                 ],
-                'circle-color': '#444',
-                'circle-stroke-color': '#fff',
+                'circle-color': '#fff',
+                'circle-stroke-color': '#333',
                 'circle-stroke-width': 1,
             },
         },

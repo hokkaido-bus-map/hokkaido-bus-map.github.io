@@ -1,15 +1,26 @@
 <template>
-    <div id="map" />
+    <div>
+        <div id="map" />
+        <Search
+            id="search"
+            @toLnglat="panTo($event)"
+            @fitBounds="fitBounds($event)"
+        />
+    </div>
 </template>
 
 <script>
-import { Map, NavigationControl, Popup } from 'maplibre-gl';
+import Search from './Search.vue';
+
+import { Map, NavigationControl, Popup, GeolocateControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import bbox from '@turf/bbox';
 
 import { getFreqSourcesLayers } from '../loader';
 
 import sightseeing from '../assets/sightseeing.json';
 import convenience from '../assets/convenience.json';
+
 import kitamiFreqGeojson from '../assets/busdata/kitami/frequency.json';
 import kitamiFreqStopsGeojson from '../assets/busdata/kitami/frequency_stops.json';
 import kitamimemanbetsuairportFreqGeojson from '../assets/busdata/kitamimemanbetsuairport/frequency.json';
@@ -230,11 +241,24 @@ const initMap = () => {
         },
     });
     map.addControl(new NavigationControl(), 'top-left');
+    map.addControl(
+        new GeolocateControl({
+            showUserLocation: true,
+            trackUserLocation: true,
+        }),
+        'top-left',
+    );
     return map;
 };
 
 export default {
     name: 'Map',
+    components: { Search },
+    data() {
+        return {
+            map: null,
+        };
+    },
     mounted: function() {
         const map = initMap();
         const onclick = (e) => {
@@ -254,6 +278,28 @@ export default {
         map.on('click', 'sightseeing', onclick);
         map.on('mouseenter', 'sightseeing', onmouseenter);
         map.on('mouseleave', 'sightseeing', onmouseleave);
+        this.map = map;
+    },
+    methods: {
+        panTo: function(lnglat) {
+            this.map.easeTo({ center: lnglat, zoom: 14 });
+        },
+        fitBounds: function(results) {
+            const featurecollection = {
+                type: 'FeatureCollection',
+                features: results.map((result) => {
+                    return {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: result.item.lnglat,
+                        },
+                    };
+                }),
+            };
+            const bounds = bbox(featurecollection);
+            this.map.fitBounds(bounds, { padding: 50 });
+        },
     },
 };
 </script>
@@ -262,5 +308,10 @@ export default {
 <style scoped>
 #map {
     height: calc(100vh - 50px);
+}
+#search {
+    position: absolute;
+    left: 48px;
+    top: 48px;
 }
 </style>
